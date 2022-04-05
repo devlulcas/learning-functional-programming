@@ -847,4 +847,6 @@ end
 [1, 2, 3] |> Enum.map( &Add.three/1 )
 ```
 
+## WITH 
+O with/1 é usado quando tentamos usar o `case/2` de maneira aninhada ou em em situações que não é possível encadear funções. A expressão with/1 é composta de palavras-chaves, generators e finalmente uma expressão.
 
