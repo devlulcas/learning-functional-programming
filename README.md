@@ -799,13 +799,52 @@ oi ++ hi |> to_string # "oi mãe hello mom"
 ```
 
 ## ENUM
+A enumeração é o coração da programação funcional.
 
 O módulo Enum é repleto de métodos para trabalhar com enumeráveis. Listas, tuplas, listas de palavras-chave, mapas, todos estes são enumeráveis.
+São mais de 70 funções que iteram, operam, tranformam e geram novas estruturas.
 
 ```elixir
+list = [1, 2, 3, 4, 5]
+list |> Enum.all?(fn num -> num >= 2 end) # false pois nem todos os elementos são maiores ou iguais a dois
+list |> Enum.any?(fn num -> num >= 2 end) # true pois ao menos um dos elementos é maior ou igual a dois
+list |> Enum.chunk_every(2) # [[1, 2], [3, 4], [5]]
+list |> Enum.each(fn num -> num + 1 end) # [2, 3, 4, 5, 6]
+list |> Enum.min() # 1 
+list |> Enum.min(fn -> :vazio end) # 1 ... mas se estivesse vazia retornaria :vazio
+list |> Enum.max() # 5 
+list |> Enum.filter(fn num -> num >= 3 end) # [3, 4, 5]
+list |> Enum.reduce(5, fn num, acc -> num + acc end) # 19 
+list |> Enum.sort(:desc) # [5, 4, 3, 2, 1]
 
+repeated_list = [1, 2, 3, 3, 4, 4]
+repeated_list |> Enum.uniq() # [1, 2, 3, 4]
 ```
+
+## OPERADOR DE CAPTURA
+Muitas funções que lidam com enumeráveis utilizam funções anônimas para lidar com cada item da sequência.
+Em alguns casos é útil usar uma sintaxe mais sucinta com o operador `&`:
 
 ```elixir
-
+[1, 2, 3] |> Enum.map(&(&1 * 2)) # [2, 4, 6]
 ```
+
+Achou confuso? Eu também achei da primeira vez. 
+
+Com &() você esta definindo que alí é uma função e com &1 você está indicando que está pegando o primeiro argumento passado para a sua função (normalmente isso é usado para funções que passam apenas um paramêtro).
+
+&1 vai ser 1 na primeira iteração, depois vai ser 2 e por último 3.
+
+> Podemos atribuir a função a uma variável e usar ela dentro das nossas funções.
+
+```elixir
+defmodule Add do 
+  def three(num), do: num + 3 
+end
+
+[1, 2, 3] |> Enum.map( &Add.three(&1) )
+# ou 
+[1, 2, 3] |> Enum.map( &Add.three/1 )
+```
+
+
